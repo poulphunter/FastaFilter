@@ -19,6 +19,7 @@ $check=false;
 $newline_LF=false;
 $removeN=false;
 $remove_sequence_newline=false;
+$truncTitle120=false;
 $NucleicAcideCode_regexp='/[^ACGTURYKMSWBDHVN\-]/i';
 $AminoAcideCode_regexp='/[^ABCDEFGHIJKLMNOPQRSTUVWXYZ\*\-]/i';
 
@@ -92,6 +93,10 @@ for ($i=0;$i<$argc;$i++)
 		{
 			$remove_sequence_newline=true;
 		}
+		if ($argv[$i]=='-truncTitle120')
+		{
+			$truncTitle120=true;
+		}
 	}
 }
 
@@ -142,6 +147,10 @@ if ($remove_sequence_newline)
 {
 	echo 'remove_sequence_newline: true'."\n";
 }
+if ($truncTitle120)
+{
+	echo 'truncTitle120: true'."\n";
+}
 if ($min_length!=-1)
 {
 	echo 'min_length: '.$min_length."\n";
@@ -183,9 +192,20 @@ function write_sequence()
 	global $newline_LF;
 	global $removeN;
 	global $remove_sequence_newline;
+	global $truncTitle120;
 	global $check;
 	global $NucleicAcideCode_regexp;
 	global $AminoAcideCode_regexp;
+	if ($truncTitle120)
+	{
+		$sequence['name']=substr($sequence['name'],0,119);
+		$sequence['name']=str_replace(";",'',$sequence['name']);
+		$sequence['name']=str_replace("\\",'',$sequence['name']);
+		$sequence['name']=str_replace('"','',$sequence['name']);
+		$sequence['name']=str_replace('<','',$sequence['name']);
+		$sequence['name']='>'.str_replace('>','',$sequence['name']);
+		// echo $sequence['name']."\n";
+	}
 	if ($uppercase)
 	{
 		$sequence['seq']=strtoupper($sequence['seq']);
